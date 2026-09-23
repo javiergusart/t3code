@@ -150,6 +150,7 @@ function CloudEnvironmentRowsContent(
               key={environment.environment.environmentId}
               environment={environment}
               borderTop={props.connectedCloudEnvironments.length > 0 || index !== 0}
+              showChevron={props.onOpenEnvironment !== undefined}
               onConnect={() => handleConnectCloudEnvironment(environment)}
               errorExpanded={expandedErrorId === environment.environment.environmentId}
               onToggleError={() => handleToggleCloudError(environment.environment.environmentId)}
@@ -257,6 +258,7 @@ function ConnectedCloudEnvironmentRow(props: {
 
 function CloudEnvironmentRow(props: {
   readonly environment: RelayEnvironmentView;
+  readonly showChevron: boolean;
   readonly borderTop: boolean;
   readonly errorExpanded: boolean;
   readonly onConnect: () => void;
@@ -271,6 +273,7 @@ function CloudEnvironmentRow(props: {
 
   return (
     <CloudEnvironmentRowShell
+      showChevron={props.showChevron}
       borderTop={props.borderTop}
       connectionError={presentation.connectionError}
       connectionErrorTraceId={presentation.connectionErrorTraceId}
@@ -296,6 +299,7 @@ function CloudEnvironmentRow(props: {
 }
 
 function CloudEnvironmentRowShell(props: {
+  readonly showChevron?: boolean;
   readonly opensDetails?: boolean;
   readonly borderTop: boolean;
   readonly connectionError: string | null;
@@ -426,8 +430,10 @@ function CloudEnvironmentRowShell(props: {
         onValueChange={props.onValueChange}
         value={props.value}
       />
-      {props.opensDetails ? (
-        <SymbolView name="chevron.right" size={12} tintColorClassName="accent-icon-subtle" />
+      {props.opensDetails || props.showChevron ? (
+        <View style={{ opacity: props.opensDetails ? 1 : 0.4 }}>
+          <SymbolView name="chevron.right" size={12} tintColorClassName="accent-icon-subtle" />
+        </View>
       ) : null}
     </View>
   );
