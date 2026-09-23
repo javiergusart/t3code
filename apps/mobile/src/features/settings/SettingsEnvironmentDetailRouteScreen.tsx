@@ -8,6 +8,7 @@ import { Alert, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppText as Text } from "../../components/AppText";
+import { ProviderIcon } from "../../components/ProviderIcon";
 import { ScreenScrollView } from "../../components/ScreenScrollView";
 import { serverEnvironment } from "../../state/server";
 import { environmentSession } from "../../state/session";
@@ -284,9 +285,12 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                     .map((provider) => (
                       <View key={provider.instanceId} className="border-t border-border-subtle">
                         <View className="gap-1 p-4">
-                          <Text className="text-base font-t3-medium text-foreground">
-                            {provider.displayName ?? provider.driver}
-                          </Text>
+                          <View className="flex-row items-center gap-2">
+                            <ProviderIcon provider={provider.driver} size={18} />
+                            <Text className="min-w-0 flex-1 text-base font-t3-medium text-foreground">
+                              {provider.displayName ?? provider.driver}
+                            </Text>
+                          </View>
                           <Text className="text-sm text-foreground-muted">
                             {provider.installed
                               ? (provider.version ?? "Version unknown")
