@@ -64,10 +64,11 @@ current release channel. Keep the app open while the environment updates and
 reconnects. Hosts that cannot update remotely show instructions for updating on
 the machine instead.
 
-The same page lets you refresh provider status, update supported providers, and
-choose whether interrupted threads continue after a restart. These controls
-require a connected environment and permission to operate it. If provider update
-checks are disabled, enable them before refreshing to find newer versions.
+The same page lets you refresh provider status and update supported providers.
+These controls require a connected environment and permission to operate it.
+Provider update checks and restart continuation preferences are in
+**Settings → Maintenance**. If provider update checks are disabled, enable them
+there before refreshing to find newer versions.
 
 Install App Store or Google Play releases as usual. The mobile app can also
 download updates in the background and apply them when you next leave the app.
