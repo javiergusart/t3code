@@ -279,65 +279,67 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                       });
                     }}
                   />
-                  {config.providers.map((provider) => (
-                    <View key={provider.instanceId} className="border-t border-border-subtle">
-                      <View className="gap-1 p-4">
-                        <Text className="text-base font-t3-medium text-foreground">
-                          {provider.displayName ?? provider.driver}
-                        </Text>
-                        <Text className="text-sm text-foreground-muted">
-                          {provider.installed
-                            ? (provider.version ?? "Version unknown")
-                            : "Not installed"}
-                          {provider.versionAdvisory?.latestVersion
-                            ? ` · Latest ${provider.versionAdvisory.latestVersion}`
-                            : ""}
-                        </Text>
-                        {provider.updateState && provider.updateState.status !== "idle" ? (
-                          <Text
-                            selectable
-                            className={
-                              provider.updateState.status === "failed"
-                                ? "text-sm text-danger-foreground"
-                                : "text-sm text-foreground-muted"
-                            }
-                          >
-                            {provider.updateState.message ??
-                              `Update ${provider.updateState.status}`}
+                  {config.providers
+                    .filter((provider) => provider.enabled)
+                    .map((provider) => (
+                      <View key={provider.instanceId} className="border-t border-border-subtle">
+                        <View className="gap-1 p-4">
+                          <Text className="text-base font-t3-medium text-foreground">
+                            {provider.displayName ?? provider.driver}
                           </Text>
-                        ) : null}
-                        {provider.compatibilityAdvisory?.message ? (
-                          <Text selectable className="text-sm text-foreground-muted">
-                            {provider.compatibilityAdvisory.message}
-                          </Text>
-                        ) : null}
-                        {provider.unavailableReason ||
-                        provider.versionAdvisory?.message ||
-                        provider.message ? (
-                          <Text selectable className="text-sm text-foreground-muted">
-                            {provider.unavailableReason ??
-                              provider.versionAdvisory?.message ??
-                              provider.message}
-                          </Text>
-                        ) : null}
-                        {provider.versionAdvisory?.status === "behind_latest" &&
-                        !provider.versionAdvisory.canUpdate ? (
                           <Text className="text-sm text-foreground-muted">
-                            Update this provider on the environment's machine.
+                            {provider.installed
+                              ? (provider.version ?? "Version unknown")
+                              : "Not installed"}
+                            {provider.versionAdvisory?.latestVersion
+                              ? ` · Latest ${provider.versionAdvisory.latestVersion}`
+                              : ""}
                           </Text>
+                          {provider.updateState && provider.updateState.status !== "idle" ? (
+                            <Text
+                              selectable
+                              className={
+                                provider.updateState.status === "failed"
+                                  ? "text-sm text-danger-foreground"
+                                  : "text-sm text-foreground-muted"
+                              }
+                            >
+                              {provider.updateState.message ??
+                                `Update ${provider.updateState.status}`}
+                            </Text>
+                          ) : null}
+                          {provider.compatibilityAdvisory?.message ? (
+                            <Text selectable className="text-sm text-foreground-muted">
+                              {provider.compatibilityAdvisory.message}
+                            </Text>
+                          ) : null}
+                          {provider.unavailableReason ||
+                          provider.versionAdvisory?.message ||
+                          provider.message ? (
+                            <Text selectable className="text-sm text-foreground-muted">
+                              {provider.unavailableReason ??
+                                provider.versionAdvisory?.message ??
+                                provider.message}
+                            </Text>
+                          ) : null}
+                          {provider.versionAdvisory?.status === "behind_latest" &&
+                          !provider.versionAdvisory.canUpdate ? (
+                            <Text className="text-sm text-foreground-muted">
+                              Update this provider on the environment's machine.
+                            </Text>
+                          ) : null}
+                        </View>
+                        {canUpdateEnvironmentProvider(provider) ? (
+                          <SettingsActionRow
+                            icon="arrow.up.circle"
+                            label={`Update ${provider.displayName ?? provider.driver}`}
+                            disabled={disabled}
+                            loading={pending === provider.instanceId}
+                            onPress={() => requestProviderUpdate(provider)}
+                          />
                         ) : null}
                       </View>
-                      {canUpdateEnvironmentProvider(provider) ? (
-                        <SettingsActionRow
-                          icon="arrow.up.circle"
-                          label={`Update ${provider.displayName ?? provider.driver}`}
-                          disabled={disabled}
-                          loading={pending === provider.instanceId}
-                          onPress={() => requestProviderUpdate(provider)}
-                        />
-                      ) : null}
-                    </View>
-                  ))}
+                    ))}
                 </SettingsSection>
                 <SettingsSection title="Maintenance preferences">
                   <SettingsSwitchRow
