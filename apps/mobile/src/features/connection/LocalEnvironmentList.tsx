@@ -4,7 +4,6 @@ import { View } from "react-native";
 
 import { SymbolView } from "../../components/AppSymbol";
 import { AppText as Text } from "../../components/AppText";
-import { cn } from "../../lib/cn";
 import { ConnectionEnvironmentRow } from "./ConnectionEnvironmentRow";
 
 type EnvironmentRowProps = ComponentProps<typeof ConnectionEnvironmentRow>;
@@ -47,12 +46,8 @@ export function LocalEnvironmentList({
 
   return (
     <View collapsable={false} className="overflow-hidden rounded-[24px] bg-grouped-card">
-      {environments.map((environment, index) => (
-        <View
-          key={environment.environmentId}
-          collapsable={false}
-          className={cn(index !== 0 && "border-t border-border")}
-        >
+      {environments.map((environment) => (
+        <View key={environment.environmentId} collapsable={false}>
           <ConnectionEnvironmentRow
             environment={environment}
             expanded={expandedId === environment.environmentId}

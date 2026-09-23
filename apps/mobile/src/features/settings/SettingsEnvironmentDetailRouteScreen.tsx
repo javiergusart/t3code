@@ -273,7 +273,7 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                   {config.providers
                     .filter((provider) => provider.enabled)
                     .map((provider) => (
-                      <View key={provider.instanceId} className="border-t border-border-subtle">
+                      <View key={provider.instanceId}>
                         <View className="gap-1 p-4">
                           <View className="flex-row items-center gap-2">
                             <ProviderIcon provider={provider.driver} size={18} />

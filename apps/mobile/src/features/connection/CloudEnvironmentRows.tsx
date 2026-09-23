@@ -126,12 +126,11 @@ function CloudEnvironmentRowsContent(
 
       {hasCloudRows ? (
         <View collapsable={false} className="overflow-hidden rounded-[24px] bg-grouped-card">
-          {props.connectedCloudEnvironments.map((environment, index) => (
+          {props.connectedCloudEnvironments.map((environment) => (
             <ConnectedCloudEnvironmentRow
               key={environment.environmentId}
               environment={environment}
               descriptor={discoveredDescriptors.get(environment.environmentId)}
-              borderTop={index !== 0}
               onSetEnabled={(enabled) =>
                 props.onSetEnvironmentEnabled(environment.environmentId, enabled)
               }
@@ -145,11 +144,10 @@ function CloudEnvironmentRowsContent(
               onToggleError={() => handleToggleCloudError(environment.environmentId)}
             />
           ))}
-          {availableCloudEnvironments.map((environment, index) => (
+          {availableCloudEnvironments.map((environment) => (
             <CloudEnvironmentRow
               key={environment.environment.environmentId}
               environment={environment}
-              borderTop={props.connectedCloudEnvironments.length > 0 || index !== 0}
               showChevron={props.onOpenEnvironment !== undefined}
               onConnect={() => handleConnectCloudEnvironment(environment)}
               errorExpanded={expandedErrorId === environment.environment.environmentId}
@@ -209,7 +207,6 @@ function ConnectedCloudEnvironmentRow(props: {
   readonly environment: ConnectedEnvironmentSummary;
   /** Discovery's view of the server, for the glyph before the first connection. */
   readonly descriptor: ExecutionEnvironmentDescriptor | undefined;
-  readonly borderTop: boolean;
   readonly errorExpanded: boolean;
   readonly onSetEnabled: (enabled: boolean) => void;
   readonly onRemove: () => void;
@@ -237,7 +234,6 @@ function ConnectedCloudEnvironmentRow(props: {
     >
       <CloudEnvironmentRowShell
         opensDetails={props.onOpen !== undefined}
-        borderTop={props.borderTop}
         connectionError={enabled || unsupported ? props.environment.connectionError : null}
         connectionErrorTraceId={enabled ? props.environment.connectionErrorTraceId : null}
         connectionState={enabled || unsupported ? props.environment.connectionState : "available"}
@@ -259,7 +255,6 @@ function ConnectedCloudEnvironmentRow(props: {
 function CloudEnvironmentRow(props: {
   readonly environment: RelayEnvironmentView;
   readonly showChevron: boolean;
-  readonly borderTop: boolean;
   readonly errorExpanded: boolean;
   readonly onConnect: () => void;
   readonly onToggleError: () => void;
@@ -274,7 +269,6 @@ function CloudEnvironmentRow(props: {
   return (
     <CloudEnvironmentRowShell
       showChevron={props.showChevron}
-      borderTop={props.borderTop}
       connectionError={presentation.connectionError}
       connectionErrorTraceId={presentation.connectionErrorTraceId}
       connectionState={presentation.connectionState}
@@ -301,7 +295,6 @@ function CloudEnvironmentRow(props: {
 function CloudEnvironmentRowShell(props: {
   readonly showChevron?: boolean;
   readonly opensDetails?: boolean;
-  readonly borderTop: boolean;
   readonly connectionError: string | null;
   readonly connectionErrorTraceId: string | null;
   readonly connectionState: EnvironmentConnectionPhase;
@@ -356,13 +349,7 @@ function CloudEnvironmentRowShell(props: {
     [measuredErrorText, props.connectionError],
   );
   return (
-    <View
-      collapsable={false}
-      className={cn(
-        "flex-row items-center gap-3 bg-grouped-card px-4 py-3.5",
-        props.borderTop && "border-t border-border",
-      )}
-    >
+    <View collapsable={false} className="flex-row items-center gap-3 bg-grouped-card px-4 py-3.5">
       <View className="min-w-0 flex-1 gap-0.5">
         <View className="min-w-0 flex-row items-center gap-2">
           <ConnectionStatusDot state={props.connectionState} pulse={shouldPulse} size={7} />
