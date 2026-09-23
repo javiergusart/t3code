@@ -35,6 +35,7 @@ import { type RelayEnvironmentView, useConnectionController } from "./useConnect
 
 interface CloudEnvironmentRowsProps {
   readonly connectedCloudEnvironments: ReadonlyArray<ConnectedEnvironmentSummary>;
+  readonly onOpenEnvironment?: (environmentId: EnvironmentId) => void;
   readonly onSetEnvironmentEnabled: (environmentId: EnvironmentId, enabled: boolean) => void;
   /** Long-press on a saved row. The callback owns the confirm. */
   readonly onRemoveEnvironment: (environmentId: EnvironmentId) => void;
@@ -135,6 +136,11 @@ function CloudEnvironmentRowsContent(
                 props.onSetEnvironmentEnabled(environment.environmentId, enabled)
               }
               onRemove={() => props.onRemoveEnvironment(environment.environmentId)}
+              onOpen={
+                props.onOpenEnvironment
+                  ? () => props.onOpenEnvironment?.(environment.environmentId)
+                  : undefined
+              }
               errorExpanded={expandedErrorId === environment.environmentId}
               onToggleError={() => handleToggleCloudError(environment.environmentId)}
             />
@@ -206,6 +212,7 @@ function ConnectedCloudEnvironmentRow(props: {
   readonly errorExpanded: boolean;
   readonly onSetEnabled: (enabled: boolean) => void;
   readonly onRemove: () => void;
+  readonly onOpen?: (() => void) | undefined;
   readonly onToggleError: () => void;
 }) {
   const serverConfig = useAtomValue(
@@ -222,9 +229,13 @@ function ConnectedCloudEnvironmentRow(props: {
   return (
     <Pressable
       accessibilityHint="Long press to remove from this device"
+      accessibilityRole={props.onOpen ? "button" : undefined}
+      accessibilityLabel={props.onOpen ? `Manage ${props.environment.environmentLabel}` : undefined}
+      onPress={props.onOpen}
       onLongPress={props.onRemove}
     >
       <CloudEnvironmentRowShell
+        opensDetails={props.onOpen !== undefined}
         borderTop={props.borderTop}
         connectionError={enabled || unsupported ? props.environment.connectionError : null}
         connectionErrorTraceId={enabled ? props.environment.connectionErrorTraceId : null}
@@ -285,6 +296,7 @@ function CloudEnvironmentRow(props: {
 }
 
 function CloudEnvironmentRowShell(props: {
+  readonly opensDetails?: boolean;
   readonly borderTop: boolean;
   readonly connectionError: string | null;
   readonly connectionErrorTraceId: string | null;
@@ -413,6 +425,9 @@ function CloudEnvironmentRowShell(props: {
         onValueChange={props.onValueChange}
         value={props.value}
       />
+      {props.opensDetails ? (
+        <SymbolView name="chevron.right" size={12} tintColorClassName="accent-icon-subtle" />
+      ) : null}
     </View>
   );
 }

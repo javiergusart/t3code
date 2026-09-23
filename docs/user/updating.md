@@ -58,6 +58,17 @@ update can roll back to the previous version. If the update still fails:
 
 ## Mobile updates
 
+To update an environment from your phone, open **Settings → Environments** and
+select it. **Check for updates** finds the latest release on that environment's
+current release channel. Keep the app open while the environment updates and
+reconnects. Hosts that cannot update remotely show instructions for updating on
+the machine instead.
+
+The same page lets you refresh provider status, update supported providers, and
+choose whether interrupted threads continue after a restart. These controls
+require a connected environment and permission to operate it. If provider update
+checks are disabled, enable them before refreshing to find newer versions.
+
 Install App Store or Google Play releases as usual. The mobile app can also
 download updates in the background and apply them when you next leave the app.
 It saves drafts and queued messages before restarting. If you keep the app open

@@ -15,7 +15,10 @@ export function LocalEnvironmentList({
   expandedId,
   onToggle,
   ...rowActions
-}: Pick<EnvironmentRowProps, "onReconnect" | "onRemove" | "onSetEnabled" | "onUpdate"> & {
+}: Pick<
+  EnvironmentRowProps,
+  "onReconnect" | "onRemove" | "onSetEnabled" | "onUpdate" | "opensDetails"
+> & {
   readonly environments: ReadonlyArray<EnvironmentRowProps["environment"]>;
   readonly expandedId: EnvironmentId | null;
   readonly onToggle: (environmentId: EnvironmentId) => void;

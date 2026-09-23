@@ -35,6 +35,7 @@ function connectionStatusLabel(environment: ConnectedEnvironmentSummary): string
 export function ConnectionEnvironmentRow(props: {
   readonly environment: ConnectedEnvironmentSummary;
   readonly expanded: boolean;
+  readonly opensDetails?: boolean;
   readonly onToggle: () => void;
   readonly onReconnect: (environmentId: EnvironmentId) => void;
   readonly onRemove: (environmentId: EnvironmentId) => void;
@@ -79,6 +80,10 @@ export function ConnectionEnvironmentRow(props: {
     <Animated.View layout={LinearTransition.duration(250)} className="bg-card">
       <Pressable
         className="flex-row items-center gap-3 px-4 py-3.5 active:opacity-70"
+        accessibilityRole="button"
+        accessibilityLabel={
+          props.opensDetails ? `Manage ${props.environment.environmentLabel}` : undefined
+        }
         onPress={props.onToggle}
       >
         <ConnectionStatusDot
@@ -131,7 +136,7 @@ export function ConnectionEnvironmentRow(props: {
           value={enabled}
         />
         <SymbolView
-          name="chevron.down"
+          name={props.opensDetails ? "chevron.right" : "chevron.down"}
           size={12}
           tintColorClassName="accent-icon-subtle"
           type="monochrome"
