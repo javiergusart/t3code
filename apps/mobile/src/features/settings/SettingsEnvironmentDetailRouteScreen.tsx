@@ -307,13 +307,9 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                               {provider.compatibilityAdvisory.message}
                             </Text>
                           ) : null}
-                          {provider.unavailableReason ||
-                          provider.versionAdvisory?.message ||
-                          provider.message ? (
+                          {provider.unavailableReason || provider.message ? (
                             <Text selectable className="text-sm text-foreground-muted">
-                              {provider.unavailableReason ??
-                                provider.versionAdvisory?.message ??
-                                provider.message}
+                              {provider.unavailableReason ?? provider.message}
                             </Text>
                           ) : null}
                           {provider.versionAdvisory?.status === "behind_latest" &&
