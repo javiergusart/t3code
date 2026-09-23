@@ -1,6 +1,6 @@
 import { useAtomValue } from "@effect/atom-react";
 import type { StaticScreenProps } from "@react-navigation/native";
-import type { EnvironmentId, ServerProvider, ServerSettingsPatch } from "@t3tools/contracts";
+import type { EnvironmentId, ServerProvider } from "@t3tools/contracts";
 import { squashAtomCommandFailure } from "@t3tools/client-runtime/state/runtime";
 import { AsyncResult } from "effect/unstable/reactivity";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +18,6 @@ import { ConnectionEnvironmentRow } from "../connection/ConnectionEnvironmentRow
 import { SettingsActionRow } from "./components/SettingsActionRow";
 import { SettingsScreen } from "./components/SettingsScreen";
 import { SettingsSection } from "./components/SettingsSection";
-import { SettingsSwitchRow } from "./components/SettingsSwitchRow";
 import {
   canMaintainEnvironment,
   canUpdateEnvironmentProvider,
@@ -53,7 +52,6 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
   const updateServer = useAtomCommand(serverEnvironment.updateServer);
   const updateProvider = useAtomCommand(serverEnvironment.updateProvider);
   const refreshProviders = useAtomCommand(serverEnvironment.refreshProviders);
-  const updateSettings = useAtomCommand(serverEnvironment.updateSettings);
   const [connectionExpanded, setConnectionExpanded] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
   const pendingRef = useRef(false);
@@ -96,14 +94,6 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
       pendingRef.current = false;
       setPending(null);
     }
-  }
-
-  function writeSettings(patch: ServerSettingsPatch) {
-    if (disabled) return;
-    void run("settings", async () => {
-      const result = await updateSettings({ environmentId, input: { patch } });
-      if (AsyncResult.isFailure(result)) throw squashAtomCommandFailure(result);
-    });
   }
 
   function requestServerUpdate() {
@@ -344,26 +334,6 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                         ) : null}
                       </View>
                     ))}
-                </SettingsSection>
-                <SettingsSection title="Maintenance preferences">
-                  <SettingsSwitchRow
-                    icon="arrow.clockwise"
-                    label="Check provider updates"
-                    subtitle="Check installed providers for newer versions."
-                    value={config.settings.enableProviderUpdateChecks}
-                    disabled={disabled}
-                    onValueChange={(value) => writeSettings({ enableProviderUpdateChecks: value })}
-                  />
-                  <SettingsSwitchRow
-                    icon="arrow.uturn.forward"
-                    label="Continue after restart"
-                    subtitle="Resume interrupted threads after an update or restart."
-                    value={config.settings.continueThreadsAfterServerUpdate}
-                    disabled={disabled || capabilities?.threadRestartContinuation !== true}
-                    onValueChange={(value) =>
-                      writeSettings({ continueThreadsAfterServerUpdate: value })
-                    }
-                  />
                 </SettingsSection>
               </>
             ) : null}
